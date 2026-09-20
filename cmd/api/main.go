@@ -3,10 +3,17 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	//create our own router so only these routes which we create using it can be accessed
 	mux := http.NewServeMux()
 
@@ -17,15 +24,15 @@ func main() {
 	})
 
 	//initialise server with configurations
-	srv := http.Server{
-		Addr:         ":8090",
+	srv := &http.Server{
+		Addr:         ":" + os.Getenv("PORT"),
 		Handler:      mux,
 		ReadTimeout:  time.Second * 10,
 		WriteTimeout: time.Second * 30,
 		IdleTimeout:  time.Second * 60,
 	}
 
-	err := srv.ListenAndServe() //we pass our custom config here
+	err = srv.ListenAndServe() //we pass our custom config here
 	if err != nil {
 		log.Fatalf("server failed: %v", err)
 	}
