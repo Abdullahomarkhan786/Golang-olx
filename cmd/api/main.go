@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -8,29 +9,31 @@ import (
 	"github.com/Abdullahomarkhan786/olx-api/internal/config"
 )
 
+// . In a web server, a mux is basically the component that matches an incoming HTTP request to the correct handler
 func main() {
 	cfg := config.MustLoad()
+	fmt.Println("Starting the olx server")
 
-	//create our own router so only these routes which we create using it can be accessed
 	mux := http.NewServeMux()
-
+	//add route
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json") //header is just a key value pair and whenever responese ends it sends all the headers
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte((`{"status":"ok"}`))) //sends the headers flushes to response
-	})
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)       //flushes or sends the headers in the response(here we send the headers)
+		w.Write([]byte(`{"status":"ok"}`)) //(here we send the data)writes data to connection as part of http reply and we use byte to convert normal string to byte
 
-	//initialise server with configurations
-	srv := &http.Server{
+	})
+	//initialising server with config
+	srv := http.Server{
 		Addr:         ":" + cfg.Port,
 		Handler:      mux,
 		ReadTimeout:  time.Second * 10,
 		WriteTimeout: time.Second * 30,
-		IdleTimeout:  time.Second * 60,
+		IdleTimeout:  time.Second * 120,
+	}
+	log.Printf("Server is running on %s", srv.Addr)
+	err := srv.ListenAndServe() //func ListenAndServe(addr string, handler Handler) error
+	if err != nil {
+		log.Fatalf("server failed %v", err)
 	}
 
-	err := srv.ListenAndServe() //we pass our custom config here
-	if err != nil {
-		log.Fatalf("server failed: %v", err)
-	}
 }
