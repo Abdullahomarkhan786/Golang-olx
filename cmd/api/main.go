@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/Abdullahomarkhan786/olx-api/internal/config"
+	"github.com/Abdullahomarkhan786/olx-api/internal/handlers"
 )
 
 // . In a web server, a mux is basically the component that matches an incoming HTTP request to the correct handler
@@ -16,12 +17,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	//add route
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)       //flushes or sends the headers in the response(here we send the headers)
-		w.Write([]byte(`{"status":"ok"}`)) //(here we send the data)writes data to connection as part of http reply and we use byte to convert normal string to byte
-
-	})
+	mux.HandleFunc("GET /healthz", handlers.Health)
 	//initialising server with config
 	srv := http.Server{
 		Addr:         ":" + cfg.Port,
