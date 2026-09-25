@@ -8,8 +8,9 @@ import (
 
 // to store config and group multiple properties use struct
 type Config struct {
-	Port string
-	Env  string
+	Port        string
+	Env         string
+	DatabaseUrl string
 }
 
 // must prefix must be loaded it loads the config variables
@@ -24,9 +25,14 @@ func MustLoad() Config {
 	if env == "" {
 		panic("env is required")
 	}
+	dbUrl := os.Getenv("DATABASE_URL")
+	if dbUrl == "" {
+		panic("database url is required")
+	}
 	return Config{
-		Port: port,
-		Env:  env,
+		Port:        port,
+		Env:         env,
+		DatabaseUrl: dbUrl,
 	}
 
 }
