@@ -19,7 +19,7 @@ func main() {
 		log.Fatal("usage:migrate <up|down>")
 	}
 	cfg := config.MustLoad()
-	m, err := migrate.New(
+	m, err := migrate.New( //m isn't itself the database or the migration files. It's the migration object configured to know where the migration files are and which database to operate on.
 		"file://migrations",
 		cfg.DatabaseUrl,
 	)

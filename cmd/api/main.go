@@ -14,7 +14,7 @@ import (
 // . In a web server, a mux is basically the component that matches an incoming HTTP request to the correct handler
 func main() {
 	cfg := config.MustLoad()
-	_, err := db.Connect(cfg.DatabaseUrl)
+	db, err := db.Connect(cfg.DatabaseUrl)
 	if err != nil {
 		log.Fatalf("main.db.connect:%v", err) //to print struct
 
@@ -24,6 +24,7 @@ func main() {
 	mux := http.NewServeMux()
 	//add route
 	mux.HandleFunc("GET /healthz", handlers.Health)
+	mux.HandleFunc("GET /listings", handlers.List(db))
 	//initialising server with config
 	srv := http.Server{
 		Addr:         ":" + cfg.Port,
