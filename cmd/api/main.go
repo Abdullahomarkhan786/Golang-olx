@@ -1,12 +1,16 @@
 package main
 
 import (
+	"Abdullahomarkhan786/Golang-olx/internal/config"
 	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
+
+	cfg := config.MustLoad()
+
 	//creates a new, independent router
 	mux := http.NewServeMux() // create our own ServeMux instead of using the global DefaultServeMux
 
@@ -19,7 +23,7 @@ func main() {
 	})
 
 	srv := http.Server{
-		Addr:         ":8090",
+		Addr:         ":" + cfg.Port,
 		Handler:      mux, ////pass custom mux, mux (multiplexer) manages multiple handlers and routes and directs each incoming HTTP request to the appropriate handler.
 		ReadTimeout:  time.Second * 10,
 		WriteTimeout: time.Second * 30,
