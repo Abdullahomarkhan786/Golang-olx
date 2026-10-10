@@ -2,6 +2,7 @@ package main
 
 import (
 	"Abdullahomarkhan786/Golang-olx/internal/config"
+	"Abdullahomarkhan786/Golang-olx/internal/handlers"
 	"log"
 	"net/http"
 	"time"
@@ -14,13 +15,7 @@ func main() {
 	//creates a new, independent router
 	mux := http.NewServeMux() // create our own ServeMux instead of using the global DefaultServeMux
 
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-
-		w.Header().Set("Content-Type", "application/json") // Set the header
-		w.WriteHeader(http.StatusOK)                       //Send status + headers
-		w.Write([]byte(`{"status":"OK"}`))                 //Send body
-
-	})
+	mux.HandleFunc("GET /healthz", handlers.Health)
 
 	srv := http.Server{
 		Addr:         ":" + cfg.Port,
