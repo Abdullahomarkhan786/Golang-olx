@@ -8,8 +8,9 @@ import (
 
 // to group these variables together we create a struct
 type Config struct {
-	Port string
-	Env  string
+	Port        string
+	Env         string
+	DatabaseUrl string
 }
 
 func MustLoad() Config { //return the struct
@@ -24,8 +25,14 @@ func MustLoad() Config { //return the struct
 	if env == "" {
 		panic("Env is required")
 	}
-	return Config{
-		Port: port,
-		Env:  env,
+	dbUrl := os.Getenv("Database_url")
+	if dbUrl == "" {
+		panic("Database url required")
 	}
+	return Config{
+		Port:        port,
+		Env:         env,
+		DatabaseUrl: dbUrl,
+	}
+
 }

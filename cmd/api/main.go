@@ -2,6 +2,7 @@ package main
 
 import (
 	"Abdullahomarkhan786/Golang-olx/internal/config"
+	"Abdullahomarkhan786/Golang-olx/internal/db"
 	"Abdullahomarkhan786/Golang-olx/internal/handlers"
 	"log"
 	"net/http"
@@ -11,6 +12,10 @@ import (
 func main() {
 
 	cfg := config.MustLoad()
+	_, err := db.Connect(cfg.DatabaseUrl)
+	if err != nil {
+		log.Fatalf("main.db.connect:%v", err)
+	}
 
 	//creates a new, independent router
 	mux := http.NewServeMux() // create our own ServeMux instead of using the global DefaultServeMux
@@ -25,7 +30,7 @@ func main() {
 		IdleTimeout:  time.Second * 60,
 	}
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatalf("server failed %v", err)
 
