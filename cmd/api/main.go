@@ -4,6 +4,7 @@ import (
 	"Abdullahomarkhan786/Golang-olx/internal/config"
 	"Abdullahomarkhan786/Golang-olx/internal/db"
 	"Abdullahomarkhan786/Golang-olx/internal/handlers"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -17,6 +18,8 @@ func main() {
 		log.Fatalf("main.db.connect:%v", err)
 	}
 
+	fmt.Println("database connection ")
+	fmt.Println("starting olx server")
 	//creates a new, independent router
 	mux := http.NewServeMux() // create our own ServeMux instead of using the global DefaultServeMux
 
