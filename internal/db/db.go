@@ -10,6 +10,7 @@ import (
 )
 
 func Connect(databaseUrl string) (*sql.DB, error) {
+	//Try connecting to the database. You have 5 seconds. If it takes longer, stop and give me an error.
 	db, err := sql.Open("pgx", databaseUrl)
 	if err != nil {
 		return nil, fmt.Errorf("sql.Open:%w", err)
@@ -23,6 +24,9 @@ func Connect(databaseUrl string) (*sql.DB, error) {
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	//fail fast if database not ready then crash
+	//Create a new context based on this background context, and give it a 5-second deadline
+	//context.Background() — the root or parent context from which you can create other contexts.
+	//context (ctx) — carries control information that an operation uses, such as deadlines and cancellation signals.
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
